@@ -42,10 +42,3 @@ jobs:
               --data-binary @"$file" \
               "${{ github.event.release.upload_url }}?name=$(basename $file)"
           done
-
-      - name: Upload VSIX as Artifact
-        if: github.event_name == 'workflow_dispatch'
-        uses: actions/upload-artifact@v4
-        with:
-          name: extension
-          path: '*.vsix'
