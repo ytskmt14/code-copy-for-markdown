@@ -1,0 +1,54 @@
+{
+  "name": "code-copy-for-markdown",
+  "displayName": "Code Copy for Markdown",
+  "description": "コードをマークダウン形式でコピーする拡張機能",
+  "version": "0.0.1",
+  "publisher": "ytskmt14",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ytskmt14/code-copy-for-markdown.git"
+  },
+  "homepage": "https://github.com/ytskmt14/code-copy-for-markdown#readme",
+  "bugs": {
+    "url": "https://github.com/ytskmt14/code-copy-for-markdown/issues"
+  },
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:codeCopyForMarkdown.copyAsMarkdown"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "codeCopyForMarkdown.copyAsMarkdown",
+        "title": "Copy as Markdown"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "codeCopyForMarkdown.copyAsMarkdown",
+        "key": "ctrl+shift+c",
+        "mac": "cmd+shift+c",
+        "when": "editorHasSelection"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "package": "vsce package",
+    "install-local": "vsce package"
+  },
+  "devDependencies": {
+    "@types/node": "^18.0.0",
+    "@types/vscode": "^1.74.0",
+    "typescript": "^4.9.4"
+  }
+}
