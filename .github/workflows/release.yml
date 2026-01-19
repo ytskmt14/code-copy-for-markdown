@@ -36,40 +36,9 @@ jobs:
         run: |
           echo "Checking for VSIX files..."
           ls -la *.vsix || echo "No VSIX files found"
-          echo "Upload URL: ${{ github.event.release.upload_url }}"
 
       - name: Upload VSIX to Release
         if: github.event_name == 'release'
-        run: |
-          for file in *.vsix; do
-            if [ -f "$file" ]; then
-              echo "Uploading $file to release ${{ github.event.release.tag_name }}"
-              FILENAME=$(basename "$file")
-              # upload_urlの{?name,label}テンプレートを適切なクエリパラメータに置き換える
-              UPLOAD_URL_BASE="${{ github.event.release.upload_url }}"
-              # {?name,label}を?name=...に置き換える（sedを使用、特殊文字をエスケープ）
-              UPLOAD_URL=$(echo "$UPLOAD_URL_BASE" | sed "s/{?name,label}/?name=$FILENAME/g")
-              echo "Base URL: $UPLOAD_URL_BASE"
-              echo "Upload URL: $UPLOAD_URL"
-              
-              HTTP_CODE=$(curl -s -o /tmp/upload_response.txt -w "%{http_code}" \
-                -X POST \
-                -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-                -H "Accept: application/vnd.github.v3+json" \
-                -F "file=@$file" \
-                "$UPLOAD_URL")
-              
-              echo "HTTP Status Code: $HTTP_CODE"
-              cat /tmp/upload_response.txt
-              
-              if [ "$HTTP_CODE" -eq 201 ]; then
-                echo "✓ Successfully uploaded $file"
-              else
-                echo "✗ Failed to upload $file (HTTP $HTTP_CODE)"
-                exit 1
-              fi
-            else
-              echo "✗ File $file not found"
-              exit 1
-            fi
-          done
+        uses: softprops/action-gh-release@v1
+        with:
+          files: "*.vsix"
