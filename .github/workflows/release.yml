@@ -33,11 +33,15 @@ jobs:
 
       - name: Upload VSIX to Release
         if: github.event_name == 'release'
-        uses: softprops/action-gh-release@v2
-        with:
-          files: '*.vsix'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          for file in *.vsix; do
+            echo "Uploading $file to release ${{ github.event.release.tag_name }}"
+            curl -X POST \
+              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              -H "Content-Type: application/octet-stream" \
+              --data-binary @"$file" \
+              "${{ github.event.release.upload_url }}?name=$(basename $file)"
+          done
 
       - name: Upload VSIX as Artifact
         if: github.event_name == 'workflow_dispatch'
